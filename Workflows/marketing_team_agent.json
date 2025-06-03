@@ -1,0 +1,1144 @@
+{
+  "name": "Marketing Team",
+  "nodes": [
+    {
+      "parameters": {
+        "name": "linkedinPost",
+        "description": "Call this tool to create a LinkedIn post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "MCFTOktnglaE7ENH",
+          "mode": "list",
+          "cachedResultName": "My project — Linkedin Template"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Form: User request submission').item.json.Email }}",
+            "Topic of Post": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Folder Name": "={{ $('Create campaign folder in Drive').item.json.id }}",
+            "Additional Context": "{{ $('Input fields').item.json.ContextText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic of Post",
+              "displayName": "Topic of Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Folder Name",
+              "displayName": "Folder Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Additional Context",
+              "displayName": "Additional Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -60,
+        -440
+      ],
+      "id": "bc795ad2-ee26-411f-9687-9a27e83d05de",
+      "name": "linkedinPost"
+    },
+    {
+      "parameters": {
+        "name": "twitter",
+        "description": "Call this tool to create a twitter post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ma9DFWxxZ5P63f6a",
+          "mode": "list",
+          "cachedResultName": "My project — Twitter Template"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic of Post": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Email": "={{ $('Form: User request submission').item.json.Email }}",
+            "Folder Name": "={{ $('Create campaign folder in Drive').item.json.id }}",
+            "Additional Context": "{{ $('Input fields').item.json.ContextText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic of Post",
+              "displayName": "Topic of Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Folder Name",
+              "displayName": "Folder Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Additional Context",
+              "displayName": "Additional Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        40,
+        -440
+      ],
+      "id": "56733baf-c298-42eb-931f-07e746c64e88",
+      "name": "twitterPost"
+    },
+    {
+      "parameters": {
+        "name": "instagramPost",
+        "description": "Call this tool to create a instagram post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "K9csfa7I2nAdlCxf",
+          "mode": "list",
+          "cachedResultName": "My project — Instagram Template"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic of Post": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Email": "={{ $('Form: User request submission').item.json.Email }}",
+            "Folder Name": "={{ $('Create campaign folder in Drive').item.json.id }}",
+            "Additional Context": "{{ $('Input fields').item.json.ContextText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic of Post",
+              "displayName": "Topic of Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Folder Name",
+              "displayName": "Folder Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Additional Context",
+              "displayName": "Additional Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        160,
+        -440
+      ],
+      "id": "2c729c18-dcbe-49c2-afa8-8bb0cec1ec66",
+      "name": "instagramPost"
+    },
+    {
+      "parameters": {
+        "name": "facebookPost",
+        "description": "Call this tool to create a Facebook post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "xl2WAMDMxw3Mbk1I",
+          "mode": "list",
+          "cachedResultName": "My project — Facebook Template"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic of Post": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Email": "={{ $('Form: User request submission').item.json.Email }}",
+            "Folder Name": "={{ $('Create campaign folder in Drive').item.json.id }}",
+            "Additional Context": "={{ $('Input fields').item.json.ContextText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic of Post",
+              "displayName": "Topic of Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Folder Name",
+              "displayName": "Folder Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Additional Context",
+              "displayName": "Additional Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        280,
+        -440
+      ],
+      "id": "4cd8fa9a-29f8-4b42-8c0a-939917830198",
+      "name": "facebookPost"
+    },
+    {
+      "parameters": {
+        "name": "blogPost",
+        "description": "Call this tool to create a Blog post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "7VRdkQcTFB8e98KK",
+          "mode": "list",
+          "cachedResultName": "My project — Blog Template"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic of Post": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Email": "={{ $('Form: User request submission').item.json.Email }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Folder Name": "={{ $('Create campaign folder in Drive').item.json.id }}",
+            "Additional Context": "{{ $('Input fields').item.json.ContextText }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic of Post",
+              "displayName": "Topic of Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Folder Name",
+              "displayName": "Folder Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "Additional Context",
+              "displayName": "Additional Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        -440
+      ],
+      "id": "7ced1ede-435c-4ec6-8c23-850afa6f6c3f",
+      "name": "blogPost"
+    },
+    {
+      "parameters": {
+        "name": "createVideo",
+        "description": "Call this tool to create a short video",
+        "workflowId": {
+          "__rl": true,
+          "value": "vbRO9pBa44NAo5EY",
+          "mode": "list",
+          "cachedResultName": "My project — Short Video - Runway"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Topic of Post": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Email": "={{ $('Form: User request submission').item.json.Email }}",
+            "Additional Context": "={{ $('Input fields').item.json.ContextText }}",
+            "Folder Name": "={{ $('Create campaign folder in Drive').item.json.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Topic of Post",
+              "displayName": "Topic of Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Folder Name",
+              "displayName": "Folder Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Additional Context",
+              "displayName": "Additional Context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        500,
+        -440
+      ],
+      "id": "3dd2c084-14b7-4c2d-9903-f41944d28ba5",
+      "name": "Create Video"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Form: User request submission').item.json['Topic of Post'] }}.{{ $('Form: User request submission').item.json.submittedAt }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1kDwGgkWkYBOgmrUyW2GWz4ymYqnsvW3h",
+          "mode": "list",
+          "cachedResultName": "Social Media Generated Content ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1kDwGgkWkYBOgmrUyW2GWz4ymYqnsvW3h"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        180,
+        -700
+      ],
+      "id": "76729680-46df-45fe-b4d4-036fdf7fd45a",
+      "name": "Create campaign folder in Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "Upload_Document___Audience_Profile__Brand_voice__etc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -800
+      ],
+      "id": "198a560f-3c98-453c-8c65-4493833aa2a7",
+      "name": "Extract text from pdf",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6275699-7279-4784-ac15-32e7a78bfde3",
+              "name": "ContextText",
+              "value": "={{ $json.text || \"No additional context provided.\"}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        20,
+        -700
+      ],
+      "id": "ee8fbcac-9424-4c03-9c0d-a7ee6277dd28",
+      "name": "Input fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "55e875b8-b0c0-433e-a4f6-de2a29e91f8e",
+              "leftValue": "={{ $json['Upload Document - Audience Profile, Brand voice, etc'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -320,
+        -720
+      ],
+      "id": "bd32e2dc-030c-4ab3-b293-86247ac62e45",
+      "name": "Check for uploaded context file",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "formTitle": "Marketing Team",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Topic of Post",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Target Audience"
+            },
+            {
+              "fieldLabel": "Content Platform",
+              "placeholder": "Linkedin, Twitter, Instagram, Blog, Facebook, Video"
+            },
+            {
+              "fieldLabel": "Upload Document - Audience Profile, Brand voice, etc",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".docx,.txt,.pdf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -480,
+        -720
+      ],
+      "id": "51112f92-f144-4de0-a036-296ba1497ee9",
+      "name": "Form: User request submission",
+      "webhookId": "a06f15e5-4cd0-44fb-aae2-396ff3063b36"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Form: User request submission').item.json.Email }}",
+        "subject": "Your Social Media Posts are Ready!",
+        "message": "=<p>Hi,</p>\n\n<p>Your requested {{ $('Form: User request submission').item.json['Content Platform'] }} content for the topic <strong>\"{{ $('Form: User request submission').item.json[\"Topic of Post\"] }}\"</strong> targeted at <strong>{{ $('Form: User request submission').item.json[\"Target Audience\"] }}</strong> has been successfully generated!</p>\n\n<hr>\n\n{{ $('Form: User request submission').item.json[\"Content Platform\"].includes(\"Twitter\") && $json.output.Twitter ? `\n<h3 style=\"color:#1DA1F2;\">🐦 Twitter Post</h3>\n<pre style=\"font-family:Arial, sans-serif; font-size:14px; line-height:1.5;\"><code>${$json.output.Twitter}</code></pre>\n` : \"\" }}\n\n{{ $('Form: User request submission').item.json[\"Content Platform\"].includes(\"Instagram\") && $json.output.Instagram ? `\n<h3 style=\"color:#C13584;\">📸 Instagram Post</h3>\n<pre style=\"font-family:Arial, sans-serif; font-size:14px; line-height:1.5;\"><code>${$json.output.Instagram}</code></pre>\n` : \"\" }}\n\n{{ $('Form: User request submission').item.json[\"Content Platform\"].includes(\"Facebook\") && $json.output.Facebook ? `\n<h3 style=\"color:#4267B2;\">📘 Facebook Post</h3>\n<pre style=\"font-family:Arial, sans-serif; font-size:14px; line-height:1.5;\"><code>${$json.output.Facebook}</code></pre>\n` : \"\" }}\n\n{{ $('Form: User request submission').item.json[\"Content Platform\"].includes(\"LinkedIn\") && $json.output.LinkedIn ? `\n<h3 style=\"color:#0077B5;\">🔗 LinkedIn Post</h3>\n<pre style=\"font-family:Arial, sans-serif; font-size:14px; line-height:1.5;\"><code>${$json.output.LinkedIn}</code></pre>\n` : \"\" }}\n\n{{ $('Form: User request submission').item.json[\"Content Platform\"].includes(\"Blog\") && $json.output.Blog ? `\n<h3>📝 Blog Post</h3>\n<pre style=\"font-family:Arial, sans-serif; font-size:14px; line-height:1.5;\"><code>${$json.output.Blog}</code></pre>\n` : \"\" }}\n\n<hr>\n\n<p>You can access all images and video here:  \n<a href=\"https://drive.google.com/drive/folders/{{ $('Create campaign folder in Drive').item.json.id }}\" target=\"_blank\" style=\"color:#3367d6;\">📂 View Folder in Google Drive</a></p>\n\n<p>Let us know if you'd like help posting or scheduling this content automatically!</p>\n\n<p>Best regards,<br><strong>Tuli</strong><br><strong>Your Marketing Assistant 🤖</strong></p>\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        840,
+        -560
+      ],
+      "id": "deccd6c3-2d02-4d6f-a929-185add9acf5e",
+      "name": "Send Email",
+      "webhookId": "116b0ed8-1556-4b82-a22c-3a70bc1e0a99",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C3hyCUUD6SDV5e3S",
+          "name": "Gmail account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1oIKpRrkol7UgEwB3I8Fz6zJXSbpC8G2Q6tvwFlYBoL4",
+          "mode": "list",
+          "cachedResultName": "Social Media Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIKpRrkol7UgEwB3I8Fz6zJXSbpC8G2Q6tvwFlYBoL4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oIKpRrkol7UgEwB3I8Fz6zJXSbpC8G2Q6tvwFlYBoL4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $('Form: User request submission').item.json.submittedAt }}",
+            "Target Audience": "={{ $('Form: User request submission').item.json['Target Audience'] }}",
+            "Topic": "={{ $('Form: User request submission').item.json['Topic of Post'] }}",
+            "Linkedin": "={{ $json.output.LinkedIn }}",
+            "Blog": "={{ $json.output.Blog }}",
+            "Facebook": "={{ $json.output.Facebook }}",
+            "Twitter": "={{ $json.output.Twitter }}",
+            "Instagram": "={{ $json.output.Instagram }}",
+            "Visuals": "=https://drive.google.com/drive/folders/{{ $('Create campaign folder in Drive').item.json.id }}",
+            "Requested Content": "={{ $('Form: User request submission').item.json['Content Platform'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Requested Content",
+              "displayName": "Requested Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Linkedin",
+              "displayName": "Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Twitter",
+              "displayName": "Twitter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Blog",
+              "displayName": "Blog",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Visuals",
+              "displayName": "Visuals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        840,
+        -720
+      ],
+      "id": "42c37ebd-b6dc-4b11-9526-843e14efc28f",
+      "name": "Log output to sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OcRz4c8siKpELh9Q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        -440
+      ],
+      "id": "06397189-8b4c-4db9-859f-9e7e674a807f",
+      "name": "GPT-4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "NOt5aUJMLJsjQ8oy",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## User Inputs & Campaign Setup\n",
+        "height": 260,
+        "width": 860,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -820
+      ],
+      "id": "b91781be-e96c-4295-a076-dd05628e4502",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Marketing Team\n",
+        "height": 220,
+        "width": 330
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -780
+      ],
+      "id": "7b67e2f7-40be-4706-bea3-5f3c06b36ee0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Output & Notification",
+        "height": 380,
+        "width": 280,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -780
+      ],
+      "id": "a963d656-f990-459c-9721-87abac4cd35c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Tool Workflows (Content Generators)",
+        "height": 200,
+        "width": 690,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -520
+      ],
+      "id": "84cc197e-7697-43c8-8146-5a2832c463c4",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Brain\n",
+        "height": 200,
+        "width": 150,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -520
+      ],
+      "id": "675c174c-9228-406a-96e3-739cb95355a2",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a {{ $('Form: User request submission').item.json['Content Platform'] }} Post  with the details specified below: \n\nTopic of Post:  {{ $('Form: User request submission').item.json['Topic of Post'] }}\n\nTarget Audience: {{ $('Form: User request submission').item.json['Target Audience'] }}\n\nAdditional Context from Uploaded Document (if any):\n{{ $('Input fields').item.json.ContextText || \"No additional context provided.\" }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Overview\nYou are a marketing team AI agent. Your job is to help the user create content based on the request. Use any aditional context if provided to guide tone, language, and audience-specific insights. \n\n## Objective\nBegin by creating a new folder in Google drive to store the generated content.\n\n## Tools\nlinkedinPost - Use this to create a LinkedIn post. \ntwitterPost - Use this to create a Twitter post. \ninstagramPost - Use this to create an Instagram post.\nfacebookPost - Use this to create a Facebook post.\nblogPost - Use this to create a blogbook post.  \ncreateVideo - Use this to create a short video.\n\n## Instructions\n- If the user requests a LinkedIn post, use the \"linkedinPost\" tool \n- If the user requests a Twitter post, use the \"twitterPost\" tool \n- If the user requests a Instagram post, use the \"instagramPost\" tool and output \"Your Instagram Post is ready\" \n- If the user requests a Facebook post, use the \"facebookPost\" tool \n- If the user requests a Blog post, use the \"blogPost\" tool\n- If the user requests a Video, use the \"createvideo\" tool and output \"Video created\"\n\n##Output Format\n\n## Output Format:\nAfter calling the tools, return your response structured into five fields:\n- Twitter: [Twitter Post here]\n- Linkedin:  [Twitter Post here]\n- Instagram: [Twitter Post here]\n- Facebook: [Twitter Post here]\n- Blog: [Twitter Post here]\n- Video: [Video URL here]\n*# Output\nOnly output the fields listed above. If the user does not request content for a specific platform, return an empty string for that field.  Do not add explanations or extra formating. Only return the actual post in this JSON. If the user requests a video, return only the link/URL to the video."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        400,
+        -700
+      ],
+      "id": "a0d86426-6779-4b40-a68f-adf07a82a7e4",
+      "name": "Marketing Team Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Twitter\": \"<Twitter post here or empty string if not requested>\",\n  \"Instagram\": \"<Instagram post here or empty string if not requested>\",\n  \"Facebook\": \"<Facebook post here or empty string if not requested>\",\n  \"LinkedIn\": \"<LinkedIn post here or empty string if not requested>\",\n  \"Blog\": \"<Blog post here or empty string if not requested>\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        -500
+      ],
+      "id": "7ee2c030-e7e1-4de4-939b-3b26f57b2d80",
+      "name": "Structured JSON Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "linkedinPost": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "twitterPost": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "instagramPost": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "facebookPost": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "blogPost": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Video": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create campaign folder in Drive": {
+      "main": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract text from pdf": {
+      "main": [
+        [
+          {
+            "node": "Input fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input fields": {
+      "main": [
+        [
+          {
+            "node": "Create campaign folder in Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for uploaded context file": {
+      "main": [
+        [
+          {
+            "node": "Extract text from pdf",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Input fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form: User request submission": {
+      "main": [
+        [
+          {
+            "node": "Check for uploaded context file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        []
+      ]
+    },
+    "GPT-4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Team Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log output to sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured JSON Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Marketing Team Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0402a27a-aa8b-403d-a49e-4b3ba16d3846",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed506d4e5967807435aefd059729f668cb590035e5ef59e71eda743207c2b33f"
+  },
+  "id": "xa3A6Q0tSYDFHuh2",
+  "tags": []
+}

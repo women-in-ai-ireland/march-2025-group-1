@@ -1,0 +1,465 @@
+{
+  "name": "Analytics Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Analytics",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Company LinkedIn URL"
+            },
+            {
+              "fieldLabel": "Email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -840,
+        -600
+      ],
+      "id": "af0be212-26bc-4ae8-973a-c24ccb5301a3",
+      "name": "Form: Company Linkedin URL",
+      "webhookId": "79095cc7-ed6f-4dd6-aa3c-6bcaebe9358f"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apimaestro~linkedin-company-posts/runs?token=apify_api_fZ1Jt4PKPpOytEgDN4W6xazhfJWecB2pRg9y",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"company_name\": \"{{ $json['Company LinkedIn URL'] }}\",\n\"page_number\": 1\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -620,
+        -600
+      ],
+      "id": "84c924c2-7e38-49a0-9674-562bd58caffe",
+      "name": "Scrape on Apify"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apify.com/v2/acts/apimaestro~linkedin-company-posts/runs/last/dataset/items?token=apify_api_fZ1Jt4PKPpOytEgDN4W6xazhfJWecB2pRg9y",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -400,
+        -600
+      ],
+      "id": "e2220d10-d7f8-45b5-aaf0-4f5331f382e8",
+      "name": "Get Scraped Posts"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a51270c-7978-4992-840b-123d7f7f5a5c",
+              "name": "post_url",
+              "value": "={{ $json.post_url }}",
+              "type": "string"
+            },
+            {
+              "id": "79ebc2e0-003e-4d0d-b80c-3b873b85941b",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "3393f714-7c13-4804-ae84-273ade10737c",
+              "name": "posted_at.date",
+              "value": "={{ $json.posted_at.date }}",
+              "type": "string"
+            },
+            {
+              "id": "a870db2d-f36d-4cee-9380-fc78047bb88c",
+              "name": "stats",
+              "value": "={{ $json.stats }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -200,
+        -440
+      ],
+      "id": "a0169fe2-017d-4b2c-971d-754e233f8041",
+      "name": "Extract required fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    posts: items.map(i => i.json)\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        -440
+      ],
+      "id": "ed183f5d-60bd-4547-ae23-9ff8cd89d0b4",
+      "name": "Aggregate Data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json.posts, null, 2) }}\n\nToday's date: {{$now.toFormat(\"yyyy-LL-dd\")}}",
+        "options": {
+          "systemMessage": "=You are a professional social media analyst.\n\nYou will receive:\n- A field called `posts` — an array of LinkedIn posts scraped from a company's page.\n- A `company_url` string (e.g., \"https://www.linkedin.com/company/women-in-ai-ireland/\")\n- A `current_date` string in ISO format (e.g., \"2025-05-19\")\n\nEach post in `posts` includes:\n- `post_url`\n- `text`\n- `posted_at` (ISO date)\n- `stats`: total_reactions, likes, comments, reposts\n\n---\n\nYour task is to generate a **LinkedIn Performance Report** for the **past 7 days** (from `current_date` minus 7 days to `current_date`, inclusive).\n\n### Requirements:\n\n1. 🧹 **Filter** the posts array to only include posts where `posted_at` falls within the last 7 days (inclusive).\n   - If no posts fall in that range, generate a message saying:  \n     `\"No LinkedIn posts were published in the past 7 days, so no report is available for this period.\"`\n   - Otherwise, continue with the report.\n\n2. 🏷 **Extract the company name** from the `company_url`:\n   - Take the last segment of the URL (e.g., \"women-in-ai-ireland\")\n   - Replace hyphens with spaces and convert to Title Case → \"Women In Ai Ireland\"\n\n3. 📅 **Determine the reporting period**:\n   - Calculate the 7-day range:\n     - `start_date` = `current_date` - 7 days\n     - `end_date` = `current_date`\n\n---\n\n### 📤 Output Format:\n\nReturn a fully styled **HTML snippet** ready to embed in an email. Use inline styles. **Do not return Markdown or JSON**.\n\n---\n\n### 📄 HTML Structure:\n\nUse only `<h1>`, `<h2>`, `<p>`, `<ul>`, `<li>`, `<a>` and apply styling inline as shown.\n\n---\n\n\n### Your HTML report should include the following sections:\n\n\n#### 🔷 Report Heading\n\n```html\n<h1 style=\"font-family: Arial, sans-serif;\">\n  LinkedIn Performance Report: [Company Name]<br>\n  <small style=\"font-weight: normal;\">Past Week (Period: [Start Date] – [End Date])</small>\n</h1>\n\n1. **Summary**  \n   Use `<h2>Summary</h2>` and show:\n   - Total number of posts\n   - Average reactions per post\n   - Average comments per post\n   - Average reposts per post\n   - Total engagement (sum of all reactions, comments, reposts)\n\n2. **Top Performing Post**  \n   Use `<h2>🏆 Top Performing Post</h2>` with:\n   - Date\n   - Snippet of content (first ~20 words from `text`)\n   - Engagement stats (total_reactions, likes, comments, reposts)\n   - Post URL as a clickable link (`<a href=\"...\">View post</a>`)\n\n3. **Performance Insights**  \n   Use `<h2>📊 Performance Insights</h2>`:\n   - Trends or patterns observed (e.g., post types with high engagement, best days, etc.)\n\n4. **Recommendations**  \n   Use `<h2>✅ Recommendations</h2>`:\n   - Specific content tips for improving performance next week\n\nUse readable fonts (Arial, sans-serif), line spacing (`line-height: 1.6`), and semantic sections.\n\nAvoid tables unless necessary — use headings and paragraphs.\n\nYour output should be a clean, **complete HTML snippet**, ready to send as an email.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        240,
+        -440
+      ],
+      "id": "dad97e70-8fbb-4c6c-8414-e71fb9477efa",
+      "name": "Generate Report"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -260
+      ],
+      "id": "6c030b5a-d344-46eb-8791-36cace8aa62a",
+      "name": "Gemini 2.0 ",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "7U3wKoEcSnwSchvX",
+          "name": "Gemini API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "Linkedin Report - ",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        700,
+        -440
+      ],
+      "id": "68d8c4b4-4423-4f62-a720-b504a2874655",
+      "name": "Send Report Email",
+      "webhookId": "3be85aaa-598b-4616-aba1-70bd8b478f3c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C3hyCUUD6SDV5e3S",
+          "name": "Gmail account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1W5ApYocDhfbaIZ5IZOLOOCdH3jqqv2Fgx20TfTe5g3Q",
+          "mode": "list",
+          "cachedResultName": "Linkedin Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1W5ApYocDhfbaIZ5IZOLOOCdH3jqqv2Fgx20TfTe5g3Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1W5ApYocDhfbaIZ5IZOLOOCdH3jqqv2Fgx20TfTe5g3Q/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Post URL": "={{ $json.post_url }}",
+            "Text": "={{ $json.text }}",
+            "Date Posted": "={{ $json.posted_at.date }}",
+            "Stats": "={{ $json.stats }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Post URL",
+              "displayName": "Post URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text",
+              "displayName": "Text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Posted",
+              "displayName": "Date Posted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Stats",
+              "displayName": "Stats",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -140,
+        -700
+      ],
+      "id": "954d207b-36aa-42d1-a8dc-377925b135bd",
+      "name": "Log Raw Data to Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OcRz4c8siKpELh9Q",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Input\n",
+        "height": 260,
+        "width": 220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        -700
+      ],
+      "id": "b741c823-8b91-4853-8ed7-fb4173b3a2c0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Data Collection\n",
+        "height": 260,
+        "width": 380,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -650,
+        -700
+      ],
+      "id": "a42ff1aa-e5ab-4457-965f-1ea9c11963b3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Preprocessing\n\n",
+        "height": 240,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -520
+      ],
+      "id": "196ed788-6d26-4fc2-ab80-915efce63d6a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Output\n",
+        "height": 260,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -520
+      ],
+      "id": "9880f090-441c-4a79-a69a-0463b43265ed",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Report Generation\n",
+        "height": 380,
+        "width": 380,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        198,
+        -520
+      ],
+      "id": "71191138-0f9d-4001-822e-e3aeb5824367",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Output\n",
+        "height": 240,
+        "width": 260,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        -780
+      ],
+      "id": "246e9903-fe20-419a-8b43-f8c472f3b716",
+      "name": "Sticky Note5"
+    }
+  ],
+  "pinData": {
+    "Form: Company Linkedin URL": [
+      {
+        "json": {
+          "Company LinkedIn URL": "https://www.linkedin.com/company/women-in-ai-ireland/",
+          "submittedAt": "2025-05-18T16:23:37.324+01:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Form: Company Linkedin URL": {
+      "main": [
+        [
+          {
+            "node": "Scrape on Apify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape on Apify": {
+      "main": [
+        [
+          {
+            "node": "Get Scraped Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Scraped Posts": {
+      "main": [
+        [
+          {
+            "node": "Extract required fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Raw Data to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract required fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Report": {
+      "main": [
+        [
+          {
+            "node": "Send Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 2.0 ": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Report",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Raw Data to Sheets": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "47216a0b-0175-46ec-8ee1-2e024aeaf59c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed506d4e5967807435aefd059729f668cb590035e5ef59e71eda743207c2b33f"
+  },
+  "id": "I8qrMCzcF0rIHeD2",
+  "tags": []
+}

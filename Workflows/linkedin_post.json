@@ -1,0 +1,352 @@
+{
+  "name": "Linkedin Template",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -492,
+        40
+      ],
+      "id": "b3dbe190-ab17-4d65-893c-6b391d0e9947",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "NOt5aUJMLJsjQ8oy",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "# Overview\nYou are an AI agent that transforms LinkedIn posts into polished, professional visual prompts for generating business-focused graphics using AI tools. These visuals are crafted to support and enhance the messaging of LinkedIn posts and appeal to a professional audience.\n\n⸻\n\n## Objective:\n\t•\tRead and interpret the LinkedIn post.\n\t•\tIdentify the key message, comparison, or data insight.\n\t•\tWrite a prompt for a visually clean, high-quality marketing-style image that:\n\t1.\tHighlights the core takeaway clearly\n\t2.\tFeels credible, modern, and editorial\n\t3.\tIs optimised for LinkedIn’s brand and business context\n\n⸻\n\n## Output Instructions:\n\t•\tOutput only the visual prompt (no quotes, no extra commentary).\n\t•\tAvoid placeholders or repeating the post.\n\t•\tInclude numbers or specific comparison points if available.\n\t•\tUse descriptive visual language and layout suggestions.\n\n⸻\n\n## Style Guidelines:\nDesign visuals that reflect a B2B, insight-driven approach:\n\t•\tRealistic textures and lighting (no flat cartoon or emoji-like icons)\n\t•\tHigh resolution and sharp detail\n\t•\tClean infographics or comparison tables (with hierarchy and visual rhythm)\n\t•\tInclude light gradients, drop shadows, glassmorphism effects, or subtle textures\n\t•\tModern colours: LinkedIn blue, slate grey, navy, white, soft neutrals\n\t•\tTypography area described for clear headlines or stats\n\t•\tProfessional, minimal illustration style — think Canva Pro, Adobe Express, or Pitch.com quality\n\n⸻\n\n## Example Prompt:\nA high-resolution LinkedIn graphic showing a clean, professional comparison table of “Apple vs. Orange.” On the left: a sliced red apple resting on a sleek white surface with soft lighting and realistic texture. On the right: a juicy orange wedge with visible pulp and shadow. In the centre: a semi-transparent grid layout with icons beside the words “Crisp”, “Juicy”, “Fibre”, “Vitamin C”. Typography is modern and sharp, with a bold sans-serif headline reading “Apple vs Orange – What Really Matters?” Soft vignette and minimal shadow give the visual depth. Editorial-style composition."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -144,
+        -180
+      ],
+      "id": "a8cbc58f-7875-4961-a78d-69ff0d653f74",
+      "name": "Image Prompt Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic of Post:  {{ $json['Topic of Post'] }}\n\nTarget Audience: {{ $json['Target Audience'] }}\n\nAdditional Context: {{ $json['Additional Context'] }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are an AI agent specialised in creating professional, educational, and engaging LinkedIn posts based on any topic provided by the user.\n\n## Objectives:\nbegin by conducting a real-time search using the Tavily tool to gather the most accurate, up-to-date information on the topic. The post should be written to appeal to the provided target audience. Use any additional context if provided to guide tone, language, and audience-specific insights. \n\nBased on your research, generate a well-structured LinkedIn post that:\n- Starts with an engaging hook\n- Professional in tone\n- Clear and easy to read\n- Educational and insightful\n- Light on emojis (use only when highly relevant and minimal)\n- Includes proper source attribution (e.g., \"according to [source]\")\n- Contains relevant hashtags to improve visibility\n- Ends with a clear call to action (e.g., asking for thoughts, feedback, or shares)\n\n## Output Instructions:\n- Your ONLY output should be the final LinkedIn post text.\n- Do not include explanations, notes, or anything beyond the post itself.\n\n## Example Workflow:\n1) Receive a topic (e.g., \"The ROI of warehouse automation\")\n2) Use Tavily to search and gather recent information or case studies \n3) Draft a LinkedIn post using that research\n4) Format it with source citations, clean structure, optional hashtags, and a call to action"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -520,
+        -180
+      ],
+      "id": "2d52017c-1d2a-4b1a-8857-4e1f16964bf3",
+      "name": "Linkedin Post Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to search the web. ",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"query\": \"{searchTerm}\",\n  \"topic\": \"general\",\n  \"search_depth\": \"advanced\",\n  \"chunks_per_source\": 3,\n  \"max_results\": 1,\n  \"time_range\": null,\n  \"days\": 7,\n  \"include_answer\": true,\n  \"include_raw_content\": false,\n  \"include_images\": false,\n  \"include_image_descriptions\": false,\n  \"include_domains\": [],\n  \"exclude_domains\": []\n}",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "searchTerm",
+              "description": "What the user is searching for"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -372,
+        40
+      ],
+      "id": "ab8bad30-75fa-4906-9233-0863f391f6b5",
+      "name": "Tavily",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YX38BjaZToTlHPlC",
+          "name": "Tavily API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Topic of Post"
+            },
+            {
+              "name": "Target Audience"
+            },
+            {
+              "name": "Email"
+            },
+            {
+              "name": "Folder Name"
+            },
+            {
+              "name": "Additional Context"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -740,
+        -180
+      ],
+      "id": "e30dae54-cf86-4998-828d-d19c59bf2270",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        232,
+        -180
+      ],
+      "id": "0988d47d-df21-499c-b180-531de9a245a3",
+      "name": "Generate Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UhLCE6IzfDG1Qrd7",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        452,
+        -180
+      ],
+      "id": "6ead26c1-799e-4087-82a1-6ce075caced1",
+      "name": "Convert to Binary"
+    },
+    {
+      "parameters": {
+        "name": "Linkedin Image",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json['Folder Name'] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        672,
+        -180
+      ],
+      "id": "eb896974-50bd-4a6c-8bee-316e21e9d1b8",
+      "name": "Upload Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81949d4a-b601-45d8-baee-49287ce38b4c",
+              "name": "Platform",
+              "value": "Instagram",
+              "type": "string"
+            },
+            {
+              "id": "d5b78358-7da5-4d77-b5ee-c37eddce15d9",
+              "name": "Generated Text",
+              "value": "={{ $('Linkedin Post Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        892,
+        -180
+      ],
+      "id": "fc0981ad-8342-45f7-baa4-8381ff9ea1fc",
+      "name": "Output to Manager Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Linkedin Post Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Image Prompt Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin Post Agent": {
+      "main": [
+        [
+          {
+            "node": "Image Prompt Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Prompt Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "Linkedin Post Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Linkedin Post Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Convert to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Binary": {
+      "main": [
+        [
+          {
+            "node": "Upload Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Image": {
+      "main": [
+        [
+          {
+            "node": "Output to Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f3509710-8908-439c-a4a0-d15f16b1417e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed506d4e5967807435aefd059729f668cb590035e5ef59e71eda743207c2b33f"
+  },
+  "id": "MCFTOktnglaE7ENH",
+  "tags": []
+}

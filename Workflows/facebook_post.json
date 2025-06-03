@@ -1,0 +1,352 @@
+{
+  "name": "Facebook Template",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -392,
+        60
+      ],
+      "id": "d096c177-0507-4a3f-9087-cc053979b3fe",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "NOt5aUJMLJsjQ8oy",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are an AI agent that transforms Facebook post content into high-end, emotionally resonant image prompts for text-to-image tools such as DALL·E, Midjourney, or Firefly. Your goal is to produce visuals that feel captured by a professional photographer, evoking emotion and encouraging users to share, save, or comment.\n\n⸻\n\n## Objective:\n\t•\tRead and analyse the provided Facebook caption or short post.\n\t•\tIdentify the core story, message, and emotional tone.\n\t•\tCraft a hyper-detailed, cinematic image prompt that:\n\t1.\tMimics the output of a full-frame DSLR or mirrorless camera with natural lens blur\n\t2.\tUses realistic lighting, textures, depth, and foreground/background balance\n\t3.\tFollows Facebook-optimised composition (landscape: 1200x630 or square: 1080x1080)\n\t4.\tHighlights storytelling moments or metaphorical scenes\n\t5.\tResonates with viewers aged 30–65+, especially around lifestyle, nature, reflection, and connection\n\t6.\tIncludes visual direction: camera angle, composition, colour grade, lighting mood, and optional typography styling\n\n⸻\n\n## Output Instructions:\n\t•\tOutput only the image prompt — no notes or explanations\n\t•\tUse rich, cinematic, photography-inspired language\n\t•\tInclude camera perspective cues (e.g. close-up, wide shot, over-the-shoulder)\n\t•\tDescribe fine textures and light behaviour (e.g. soft morning haze, glinting petals, dusty boots)\n\t•\tSpecify colour palette and lighting mood (e.g. overcast blue-grey, warm golden hour)\n\t•\tMention layout options for natural text integration if relevant (e.g. space on fence slat, chalkboard sign)\n\n⸻\n\n## Style Guidelines:\nYour prompt should reflect the feel of:\n\t•\tEditorial photography (Kinfolk, Patagonia, National Geographic)\n\t•\tNatural cinematic lighting – backlit haze, long shadows, ambient glow\n\t•\tDocumentary realism – no perfection, just richness and nuance\n\t•\tDetailed physical textures – soil, skin, wood, leaves, fur, cloth\n\t•\tSubtle emotion – captured in gesture, environment, light\n\t•\tUse framing cues like rule of thirds, bokeh, natural lines to guide attention\n\nThemes that perform well on Facebook:\n\t•\tSeasonal change and rituals (planting, first harvest, weather shifts)\n\t•\tQuiet emotion (care, reflection, anticipation, renewal)\n\t•\tWholesome beauty (gardens, pets, cups of tea, handwritten notes)\n\t•\tNostalgia and small wins (childhood memories, nature moments, domestic joy)\n\n⸻\n\n## Example Prompt:\nA Facebook-ready landscape image in 1200x630 format. Close-up over-the-shoulder view of a gardener planting a small tomato seedling at sunset. The hand holds a trowel mid-dig, and the soil is freshly turned and moist. Seed packets rest beside the plant, slightly creased and dusted with earth. Golden light streams from the upper left corner, casting soft shadows and creating a warm haze around the leaves. In the softly blurred background, a raised bed and watering can hint at a fuller garden. The atmosphere is peaceful and timeless. Colour palette: warm rusts, leafy greens, and golden tones. Optional space for text on a wooden garden tag staked in the soil."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -44,
+        -160
+      ],
+      "id": "d0a910bb-3b0e-4115-abb2-18a2fd53371b",
+      "name": "Image Prompt Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to search the web. ",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"query\": \"{searchTerm}\",\n  \"topic\": \"general\",\n  \"search_depth\": \"advanced\",\n  \"chunks_per_source\": 3,\n  \"max_results\": 1,\n  \"time_range\": null,\n  \"days\": 7,\n  \"include_answer\": true,\n  \"include_raw_content\": false,\n  \"include_images\": false,\n  \"include_image_descriptions\": false,\n  \"include_domains\": [],\n  \"exclude_domains\": []\n}",
+        "placeholderDefinitions": {
+          "values": [
+            {
+              "name": "searchTerm",
+              "description": "What the user is searching for"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -272,
+        60
+      ],
+      "id": "bb732154-6595-46dc-add0-96629117b012",
+      "name": "Tavily",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YX38BjaZToTlHPlC",
+          "name": "Tavily API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic of Post:  {{ $json['Topic of Post'] }}\n\nTarget Audience: {{ $json['Target Audience'] }}\n\nAdditional Context: {{ $json['Additional Context'] }}",
+        "options": {
+          "systemMessage": "=## Objectives:\nbegin by conducting a real-time search using the Tavily tool to\ngather the most accurate, up-to-date information on the topic. Based on this, create a Facebook post that:\n\t•\tStarts with a compelling opening line (a short story, hook, or question)\n\t•\tUses a warm, authentic, and slightly more detailed tone suitable for Facebook’s broader, often older audience\n\t•\tPresents the information in a narrative or insight-driven format\n\t•\tBreaks content into short, readable paragraphs\n\t•\tIncludes relevant stats, quotes, or examples from your Tavily research\n\t•\tEnds with a clear call to action (e.g., “What’s your experience?”, “Share this with a friend”)\n\t•\tCan include relevant links (to blogs, resources, etc.)\n\t•\tMay include emojis (optional and minimal)\n\t•\tOptionally includes 1–3 relevant hashtags at the end\n\n Use any additional context if provided to guide tone, language, and audience-specific insights. \n⸻\n\n## Style Guidelines:\n\t•\tKeep the tone conversational and community-friendly\n\t•\tUse short paragraphs and line breaks for easy reading\n\t•\tShare insight, perspective, or tips in a natural voice\n\t•\tLinks are encouraged when useful\n\t•\tEmojis are optional and should not feel forced\n\t•\tAvoid sounding corporate or overly promotional\n\n⸻\n\n## Output Instructions:\n\t•\tYour ONLY output should be the final Facebook post text\n\t•\tDo NOT include explanations, system messages, or metadata\n\n⸻\n\n## Example Workflow:\n\t1.\tReceive a topic (e.g., “The benefits of automation for small business owners”)\n\t2.\tUse Tavily to search for the latest insights, articles, or examples\n\t3.\tDraft a Facebook post using that research in a thoughtful, engaging tone\n\t4.\tFormat with spacing and paragraphs for readability\n\t5.\tInclude a link if relevant and a CTA to encourage interaction\n\t6.\tAdd 1–3 targeted hashtags if appropriate\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -420,
+        -160
+      ],
+      "id": "d60338ed-fb2b-4361-99eb-4aef6cce6607",
+      "name": "Facebook Post Agent"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Topic of Post"
+            },
+            {
+              "name": "Target Audience"
+            },
+            {
+              "name": "Email"
+            },
+            {
+              "name": "Folder Name"
+            },
+            {
+              "name": "Additional Context"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        -160
+      ],
+      "id": "60330e94-1e5a-42bb-83d3-1c9a24449b40",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81949d4a-b601-45d8-baee-49287ce38b4c",
+              "name": "Platform",
+              "value": "Instagram",
+              "type": "string"
+            },
+            {
+              "id": "d5b78358-7da5-4d77-b5ee-c37eddce15d9",
+              "name": "Generated Text",
+              "value": "={{ $('Facebook Post Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        992,
+        -160
+      ],
+      "id": "a075a175-311a-4d06-92b3-1447d999b761",
+      "name": "Output to Manager Agent"
+    },
+    {
+      "parameters": {
+        "name": "Facebook Image",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json['Folder Name'] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        772,
+        -160
+      ],
+      "id": "7272082f-5339-4b10-bc41-da9f29f6a111",
+      "name": "Upload Image",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        552,
+        -160
+      ],
+      "id": "827ba4f3-8c0a-4af2-8e1b-8255d309ad1d",
+      "name": "Convert to Binary"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        332,
+        -160
+      ],
+      "id": "a2ad4444-a58a-4bea-af40-c29dbc026982",
+      "name": "Get Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UhLCE6IzfDG1Qrd7",
+          "name": "OpenAI"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Facebook Post Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Image Prompt Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Prompt Agent": {
+      "main": [
+        [
+          {
+            "node": "Get Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "Facebook Post Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Post Agent": {
+      "main": [
+        [
+          {
+            "node": "Image Prompt Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Facebook Post Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Image": {
+      "main": [
+        [
+          {
+            "node": "Output to Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Binary": {
+      "main": [
+        [
+          {
+            "node": "Upload Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image": {
+      "main": [
+        [
+          {
+            "node": "Convert to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "98cb0016-32c5-41c7-a8b8-1ad2475bfa6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed506d4e5967807435aefd059729f668cb590035e5ef59e71eda743207c2b33f"
+  },
+  "id": "xl2WAMDMxw3Mbk1I",
+  "tags": []
+}

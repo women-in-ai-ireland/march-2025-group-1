@@ -1,0 +1,683 @@
+{
+  "name": "Product Videography",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "openai/gpt-4.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -160
+      ],
+      "id": "82bea8bf-d0a2-4dea-bc11-97575cbf36d7",
+      "name": "GPT 4.1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "qjfc60yaLFVLJKmC",
+          "name": "OpenRouter "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.dev.runwayml.com/v1/tasks/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Runway-Version",
+              "value": "2024-11-06"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        20
+      ],
+      "id": "7ec2f0da-934b-4580-b969-d589fd840fe4",
+      "name": "Get Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "DT8RO9QZIrVPxoqE",
+          "name": "RUNWAY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Go 2 Market",
+        "formDescription": "Give us a product photo, title, and description, and we'll get back to you with professional marketing materials. ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Product Photo",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Product Title",
+              "placeholder": "Toothpaste",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Product Description",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "name@example.com",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        -300
+      ],
+      "id": "24ebc5cd-dca2-4916-ad0e-ecb3b0955b77",
+      "name": "Form: Product Upload",
+      "webhookId": "a78187ee-323c-457e-bbf1-fcdaf332cdcc"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "Product_Photo",
+        "name": "={{ $json['Product Title'] }} (Original)",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1q6lDFp2-VCpU_VDybDVQLz5qjiREmDdB",
+          "mode": "list",
+          "cachedResultName": "Product  Videography",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1q6lDFp2-VCpU_VDybDVQLz5qjiREmDdB"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -520,
+        -300
+      ],
+      "id": "7e61cec9-b38c-484f-9603-03434d78dcd0",
+      "name": "Save Image to Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Product: {{ $('Form: Product Upload').item.json['Product Title'] }}\nDescription: {{ $('Form: Product Upload').item.json['Product Description'] }}",
+        "options": {
+          "systemMessage": "=# Overview\nYou are a world-class marketing strategist and an expert text-to-image prompt engineer specializing in creating hyper-realistic, high-quality product photography prompts for AI image generation models.\n\n## Your Objective:\nWhen given a product description, your task is to craft a detailed, professional prompt that results in a hyper-realistic, clean, and visually stunning product image suitable for marketing material, advertising campaigns, or e-commerce platforms.\n\n## Key Requirements:\n- Focus on hyper-realistic, professional studio photography.\n- Maintain a clean, minimalistic, and elegant visual style.\n- Highlight the product as the main subject with sharp detail and perfect lighting.\n- Use backgrounds that complement but do not overpower the product (e.g., soft gradient, light-colored, or pure white).\n- Include professional lighting details such as \"softbox lighting\", \"studio lights\", or \"natural soft shadows\".\n- Emphasize realism, texture, and color accuracy.\n- Maintain a high-end, premium look and feel.\n- If applicable, suggest a subtle setting that enhances the product's story (e.g., a luxury kitchen counter for a high-end blender).\n\n## Output Format:\n- Write a single text-to-image prompt optimized for a professional AI image model.\n- Be direct and descriptive without using excessive words.\n- Avoid unnecessary repetition or adjectives that do not enhance the image quality.\n- Ensure the prompt is complete and ready for direct input into an AI model.\n\n## Tone:\nProfessional, precise, clean, and optimized for maximum realism and marketing impact.\n\n# Example Input:\n\"A premium wireless Bluetooth speaker in matte black, cylindrical shape, modern design.\"\n\n# Example Output:\n\"Hyper-realistic product photo of a premium matte black wireless Bluetooth speaker with a cylindrical modern design, centered on a clean white studio background, softbox lighting with natural shadows, sharp focus on texture and material, minimalistic, professional advertising shot.\"\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -260,
+        -300
+      ],
+      "id": "97fe089c-3fbf-43e3-b549-8755e1db6d14",
+      "name": "Grenerate Image Prompt"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Save Image to Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        100,
+        -300
+      ],
+      "id": "ef89538a-039a-4a58-9371-3a77b70813b4",
+      "name": "Download image from Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/edits",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $('Grenerate Image Prompt').item.json.output }}"
+            },
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -300
+      ],
+      "id": "5297c202-4be1-44fc-88d0-f672b994f526",
+      "name": "Create Marketing Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UhLCE6IzfDG1Qrd7",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        540,
+        -300
+      ],
+      "id": "3777bc15-9634-4623-8857-f633ac0e37c4",
+      "name": "Convert Image to Binary"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Form: Product Upload').item.json['Product Title'] }} (Generated)",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1q6lDFp2-VCpU_VDybDVQLz5qjiREmDdB",
+          "mode": "list",
+          "cachedResultName": "Product  Videography",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1q6lDFp2-VCpU_VDybDVQLz5qjiREmDdB"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        740,
+        -300
+      ],
+      "id": "705e2cf4-243f-4c39-8800-e1ed7014d111",
+      "name": "Save final Image to drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -700,
+        20
+      ],
+      "id": "d286e634-5fff-47af-940d-3541603c3f57",
+      "name": "Download Image (Video Input)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "T5w5o6v62i4UlEyT",
+          "name": "WAI Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.dev.runwayml.com/v1/image_to_video",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Runway-Version",
+              "value": "2024-11-06"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "promptImage",
+              "value": "={{ $json.data.url }}"
+            },
+            {
+              "name": "model",
+              "value": "gen4_turbo"
+            },
+            {
+              "name": "promptText",
+              "value": "=Create a highly professional marketing video from the provided product photo. Simulate a smooth, realistic 3D turntable rotation around the product, as if the product is slowly rotating in place. The movement should be continuous, slow, and elegant — no sudden pans, jerks, or camera cuts. Always keep the entire product fully in frame, centered, and clearly visible at all times. Avoid zooming in or cropping. Focus on a premium, clean, and modern aesthetic that feels suitable for commercial marketing materials. No flashy effects, transitions, or overlays — only a subtle, realistic 3D rotation that highlights the product in the most polished way possible."
+            },
+            {
+              "name": "duration",
+              "value": "10"
+            },
+            {
+              "name": "ratio",
+              "value": "960:960"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -480,
+        20
+      ],
+      "id": "1e7ae45c-2d44-44e0-b62c-e5a1021d4142",
+      "name": "Generate Video (Runway)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "DT8RO9QZIrVPxoqE",
+          "name": "RUNWAY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        20
+      ],
+      "id": "8ad27be5-9277-4761-8dbb-2a56eb3cf0c1",
+      "name": "Wait for Runway Generation",
+      "webhookId": "ca683376-c527-433a-a229-dc766fa2e728"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "b3780b88-183d-498f-baaf-9ea0972606ef",
+      "name": "Retry Delay",
+      "webhookId": "2023837a-e386-4dad-83b6-34ddfc91dd3e"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Form: Product Upload').item.json.Email }}",
+        "subject": "=Marketing Video:  {{ $('Form: Product Upload').item.json['Product Title'] }}",
+        "emailType": "text",
+        "message": "=Hey!\n\nHere is your photo: {{ $('Get  Image URL').item.json.data.url }}\n\nHere is your video: {{ $('Get Video').item.json.output[0] }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        500,
+        40
+      ],
+      "id": "e8d93020-517e-4404-9770-57cbc5117e4c",
+      "name": "Send Email ",
+      "webhookId": "3f59a7dd-c5f7-4d06-a7c0-0e59454b3fbd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Ut9lIp3FVCkpYDbK",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b45aec04-a6dc-4118-8318-42f40f903935",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "RUNNING",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        20
+      ],
+      "id": "a2275860-b17f-4398-865a-5ebf6a61fa9e",
+      "name": "Video status - still running?"
+    },
+    {
+      "parameters": {
+        "content": "## Input & Upload\n",
+        "height": 220,
+        "width": 440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        -360
+      ],
+      "id": "5862a82c-41fc-4f2f-8d08-c877d229454a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Image Generation",
+        "height": 240,
+        "width": 880,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -360
+      ],
+      "id": "e6ccf4cb-0e37-493e-8ef5-6510793421ac",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Video Generation\n",
+        "height": 280,
+        "width": 1200,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        -40
+      ],
+      "id": "7d7b9663-f51d-4bf2-b81e-8dd5fc46c8cc",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Output\n",
+        "height": 280,
+        "width": 260,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -40
+      ],
+      "id": "fdd97dd9-ede4-43a1-9b88-5cfa4c660de7",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Image Prompt Generation\n",
+        "height": 300,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -360
+      ],
+      "id": "f71b17d2-9970-48e6-9079-8b3e8277ac40",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "GPT 4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Grenerate Image Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video": {
+      "main": [
+        [
+          {
+            "node": "Video status - still running?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form: Product Upload": {
+      "main": [
+        [
+          {
+            "node": "Save Image to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Image to Drive": {
+      "main": [
+        [
+          {
+            "node": "Grenerate Image Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grenerate Image Prompt": {
+      "main": [
+        [
+          {
+            "node": "Download image from Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image from Drive": {
+      "main": [
+        [
+          {
+            "node": "Create Marketing Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Marketing Image": {
+      "main": [
+        [
+          {
+            "node": "Convert Image to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Image to Binary": {
+      "main": [
+        [
+          {
+            "node": "Save final Image to drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save final Image to drive": {
+      "main": [
+        [
+          {
+            "node": "Download Image (Video Input)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image (Video Input)": {
+      "main": [
+        [
+          {
+            "node": "Generate Video (Runway)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video (Runway)": {
+      "main": [
+        [
+          {
+            "node": "Wait for Runway Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Runway Generation": {
+      "main": [
+        [
+          {
+            "node": "Get Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Delay": {
+      "main": [
+        [
+          {
+            "node": "Get Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video status - still running?": {
+      "main": [
+        [
+          {
+            "node": "Retry Delay",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Email ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e7ad8f81-162c-4a5c-9962-25aae7ed4ea0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed506d4e5967807435aefd059729f668cb590035e5ef59e71eda743207c2b33f"
+  },
+  "id": "BoGqIqaQCMxYHWMj",
+  "tags": []
+}
